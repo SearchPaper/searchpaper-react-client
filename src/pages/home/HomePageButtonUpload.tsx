@@ -55,10 +55,13 @@ export default function HomePageButtonUpload() {
     e.preventDefault();
     const submitter = e.nativeEvent.submitter as HTMLInputElement;
 
+    const form = e.target as HTMLFormElement;
+
     if (submitter.value === "Upload") {
       startTransfer(files);
     }
     setFiles([]);
+    form.reset();
     toggle();
   };
 
@@ -79,15 +82,6 @@ export default function HomePageButtonUpload() {
 
   return (
     <>
-      <input
-        type="file"
-        className="hidden"
-        id="file-input"
-        onChange={handleInputChange}
-        multiple
-        accept=".pdf,.txt,.csv"
-      />
-
       <label
         className="btn btn-xl btn-primary btn-circle"
         htmlFor="file-input"
@@ -113,6 +107,15 @@ export default function HomePageButtonUpload() {
               <input className="btn btn-primary" type="submit" value="Close" />
 
               <input className="btn btn-success" type="submit" value="Upload" />
+
+              <input
+                type="file"
+                className="hidden"
+                id="file-input"
+                onChange={handleInputChange}
+                multiple
+                accept=".pdf,.txt,.csv"
+              />
             </form>
           </div>
         </div>

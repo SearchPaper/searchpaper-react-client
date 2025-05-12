@@ -51,7 +51,7 @@ queueEmitter.addEventListener("enqueue", async (event) => {
     const response = await fetch("/api/documents", {
       method: "POST",
       body: formData,
-      signal: AbortSignal.timeout(10_000),
+      signal: AbortSignal.timeout(60_000),
     });
 
     useFileTransferStore.setState((state) => ({
