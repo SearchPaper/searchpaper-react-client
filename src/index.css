@@ -12,3 +12,7 @@
 html {
   scrollbar-gutter: auto !important;
 }
+
+.info {
+  @apply text-info;
+}
