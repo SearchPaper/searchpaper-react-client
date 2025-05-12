@@ -8,3 +8,7 @@
   name: "dark";
   --radius-field: 0rem;
 }
+
+html {
+  scrollbar-gutter: auto !important;
+}

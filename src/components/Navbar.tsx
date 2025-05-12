@@ -1,4 +1,5 @@
 import { Link } from "wouter";
+import DrawerButtonUpload from "./DrawerButtonUpload";
 
 export function NavbarDropdownMenu() {
   return (
@@ -9,7 +10,11 @@ export function NavbarDropdownMenu() {
       <ul
         tabIndex={0}
         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
-      ></ul>
+      >
+        <li>
+          <Link to="/documents">Documents</Link>
+        </li>
+      </ul>
     </div>
   );
 }
@@ -25,6 +30,7 @@ export function Navbar() {
         </div>
         <div className="navbar-center"></div>
         <div className="navbar-end">
+          <DrawerButtonUpload />
           <NavbarDropdownMenu />
         </div>
       </nav>
