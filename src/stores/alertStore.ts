@@ -22,7 +22,7 @@ export const useAlertStore = create<AlertStore>((set) => ({
       if (!response.ok) {
         alert["message"] = response.statusText;
       }
-      return { alerts: [...state.alerts, { response, message, _id }] };
+      return { alerts: [...state.alerts, alert] };
     });
 
     setTimeout(() => {

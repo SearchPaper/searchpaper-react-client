@@ -9,6 +9,15 @@ export default function HomePageButtonUpload() {
   const { files, setFiles, removeFile, startTransfer } = useFileTransferStore();
   const [isOpen, setIsOpen] = useState(false);
 
+  const [homeFolderSelect, setHomeFolderSelect] = useState<HTMLSelectElement>();
+
+  useEffect(() => {
+    const element = document.getElementById(
+      "home-folder-select"
+    ) as HTMLSelectElement;
+    setHomeFolderSelect(element);
+  }, []);
+
   const toggle = () => {
     setIsOpen(!isOpen);
   };
@@ -58,9 +67,15 @@ export default function HomePageButtonUpload() {
     const form = e.target as HTMLFormElement;
 
     if (submitter.value === "Upload") {
-      startTransfer(files);
+      if (!homeFolderSelect) {
+        throw new Error("Something is wrong with the folder select");
+      }
+
+      const folder = homeFolderSelect.value;
+
+      startTransfer(files, folder);
+      setFiles([]);
     }
-    setFiles([]);
     form.reset();
     toggle();
   };
@@ -94,7 +109,7 @@ export default function HomePageButtonUpload() {
       {length > 0 && <p>{length} file(s) selected</p>}
 
       <dialog className="modal modal-bottom sm:modal-middle" open={isOpen}>
-        <div className="modal-box">
+        <div className="modal-box gap-3">
           <section className="grid gap-3" id="files-row">
             {filesRow}
           </section>

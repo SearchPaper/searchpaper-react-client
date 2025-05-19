@@ -2,24 +2,28 @@ import { useEffect, useRef, useState } from "react";
 import { useDocumentStore } from "./documentsStore";
 
 export default function DocumentsPageSearchBar() {
-  const { list } = useDocumentStore();
+  const { list, searchParams } = useDocumentStore();
 
-  const [searchInput, setSearchInput] = useState("");
+  const { folder } = searchParams;
+
+  const [searchInput, setSearchInput] = useState<string | undefined>(undefined);
   const [isTyping, setIsTyping] = useState(false);
 
   const timeOutId = useRef<NodeJS.Timeout>(undefined);
 
   useEffect(() => {
-    setIsTyping(true);
-    clearTimeout(timeOutId.current);
+    if (searchInput !== undefined) {
+      setIsTyping(true);
+      clearTimeout(timeOutId.current);
 
-    timeOutId.current = setTimeout(() => {
-      const [page, size, term] = ["0", "7", searchInput];
+      timeOutId.current = setTimeout(() => {
+        const [page, size, term] = ["0", "7", searchInput];
 
-      list({ page, size, term });
+        list({ page, size, term, folder });
 
-      setIsTyping(false);
-    }, 1000);
+        setIsTyping(false);
+      }, 1000);
+    }
   }, [searchInput]);
 
   return (

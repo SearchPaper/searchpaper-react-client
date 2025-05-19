@@ -1,19 +1,23 @@
 import { SyntheticEvent, useState } from "react";
-import { Document, useDocumentStore } from "./documentsStore";
+import { useSearchParams } from "wouter";
+import { Folder, useFolderStore } from "./foldersStore";
 import { useAlertStore } from "../../stores/alertStore";
 
-interface Props {
-  document: Document;
+interface Parameters {
+  folder: Folder;
 }
 
-export default function DocumentsPageButtonDelete({ document }: Props) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+export default function FoldersPageButtonDelete({ folder }: Parameters) {
+  const [searchParams] = useSearchParams();
 
-  const { list, remove, searchParams, documents } = useDocumentStore();
-  const { page, size, term, folder } = searchParams;
+  const term = searchParams.get("term") ?? "";
+  const page = searchParams.get("page") ?? "0";
+  const size = searchParams.get("size") ?? "7";
 
+  const { list, remove } = useFolderStore();
   const { pushAlert } = useAlertStore();
+
+  const [isOpen, setIsOpen] = useState(false);
 
   const toggle = () => {
     setIsOpen(!isOpen);
@@ -22,42 +26,28 @@ export default function DocumentsPageButtonDelete({ document }: Props) {
   const handleSubmit = async (
     e: SyntheticEvent<HTMLFormElement, SubmitEvent>
   ) => {
-    e.preventDefault();
     const submitter = e.nativeEvent.submitter as HTMLInputElement;
 
-    toggle();
-
     if (submitter.value === "delete") {
-      setIsLoading(true);
+      const response = await remove(folder);
 
-      const response = await remove(document);
+      pushAlert(response, "folder deleted");
 
-      setIsLoading(false);
-
-      pushAlert(response, "document deleted");
-
-      list({ page, size, term, folder });
-
-      if (documents.length <= Number(size)) {
-        list({ page: "0", size, term, folder });
-      }
+      list({ page, size, term });
     }
   };
 
   return (
     <>
       <button className="btn btn-xs btn-error btn-circle" onClick={toggle}>
-        {!isLoading && <i className="fa-solid fa-trash" />}
-        {isLoading && (
-          <span className="loading loading-spinner loading-xs"></span>
-        )}
+        <i className="fa-solid fa-trash" />
       </button>
-      <dialog className="modal xl:modal-middle modal-bottom" open={isOpen}>
+      <dialog className="modal xl:modal-middle modal-bottom">
         <div className="hidden xl:flex modal-action"></div>
 
         <div className="modal-box">
           <p className="font-bold text-error text-center text-lg">
-            This action is not reversible
+            This will delete all documents within this folder
           </p>
           <form
             action="#"
@@ -71,11 +61,20 @@ export default function DocumentsPageButtonDelete({ document }: Props) {
             <input
               type="text"
               name="name"
-              defaultValue={document.fileName}
+              defaultValue={folder.name}
               className="input input-error w-full"
               readOnly
             />
-
+            <label htmlFor="" className="label">
+              Description
+            </label>
+            <input
+              type="text"
+              name="description"
+              defaultValue={folder.description}
+              className="input input-error w-full"
+              readOnly
+            />
             <div className="flex justify-end gap-3">
               <input
                 type="submit"

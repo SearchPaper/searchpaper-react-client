@@ -12,14 +12,14 @@ export default function DocumentsPagePagination({ pages = 0 }: Props) {
 
   const pagesArray = Array.from(Array(pages));
 
-  const { size, term } = searchParams;
+  const { size, term, folder } = searchParams;
 
   const onClick = async (index: string) => {
     setIsLoading(true);
 
     const page = index;
 
-    await list({ page, size, term });
+    await list({ page, size, term, folder });
     setIsLoading(false);
   };
 

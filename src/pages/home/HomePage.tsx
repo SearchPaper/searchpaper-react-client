@@ -8,6 +8,7 @@ import {
 import { v4 as uuidv4 } from "uuid";
 
 import UploadButton from "./HomePageButtonUpload";
+import HomePageDropdownFolders from "./HomePageDropdownFolders";
 
 export default function HomePage() {
   const { setFiles } = useFileTransferStore();
@@ -39,6 +40,8 @@ export default function HomePage() {
         >
           <UploadButton />
         </div>
+
+        <HomePageDropdownFolders />
       </main>
     </template>
   );

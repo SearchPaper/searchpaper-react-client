@@ -4,6 +4,7 @@ import ResponseAlerts from "./components/ResponseAlerts";
 import HomePage from "./pages/home/HomePage";
 import DocumentsPage from "./pages/documents/DocumentsPage";
 import SearchPage from "./pages/search/SearchPage";
+import FoldersPage from "./pages/folders/FoldersPage";
 
 const App = () => (
   <>
@@ -21,6 +22,10 @@ const App = () => (
 
       <Route path="/search">
         <SearchPage />
+      </Route>
+
+      <Route path="/folders">
+        <FoldersPage />
       </Route>
 
       <Route>404: No such page!</Route>

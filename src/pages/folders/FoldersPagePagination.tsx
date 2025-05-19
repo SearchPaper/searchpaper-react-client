@@ -1,25 +1,25 @@
 import { useState } from "react";
-import { useSearchStore } from "./searchStore";
+import { useFolderStore } from "./foldersStore";
 
 interface Props {
   pages: number;
 }
 
-export default function SearchPagePagination({ pages = 0 }: Props) {
+export default function FoldersPagePagination({ pages = 0 }: Props) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const { search, searchParams } = useSearchStore((state) => state);
+  const { list, searchParams } = useFolderStore();
 
   const pagesArray = Array.from(Array(pages));
 
-  const { size, query } = searchParams;
+  const { size, term } = searchParams;
 
   const onClick = async (index: string) => {
     setIsLoading(true);
 
     const page = index;
 
-    await search({ page, size, query });
+    await list({ page, size, term });
     setIsLoading(false);
   };
 

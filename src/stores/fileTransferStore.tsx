@@ -11,7 +11,7 @@ interface HomeStore {
   cleanTransferQueue: () => void;
   setFiles: (files: FileWithId[]) => void;
   removeFile: (_id: string) => void;
-  startTransfer: (files: FileWithId[]) => void;
+  startTransfer: (files: FileWithId[], folder: string) => void;
 }
 
 const queueEmitter = new EventTarget();
@@ -28,9 +28,9 @@ export const useFileTransferStore = create<HomeStore>((set) => ({
       files: [...state.files].filter((file) => file._id !== _id),
     }));
   },
-  startTransfer: async (files) => {
+  startTransfer: async (files, folder) => {
     for (const file of files) {
-      const event = new CustomEvent("enqueue", { detail: file });
+      const event = new CustomEvent("enqueue", { detail: { file, folder } });
       queueEmitter.dispatchEvent(event);
     }
   },
@@ -38,7 +38,7 @@ export const useFileTransferStore = create<HomeStore>((set) => ({
 
 queueEmitter.addEventListener("enqueue", async (event) => {
   const customEvent = event as CustomEvent;
-  const file = customEvent.detail as FileWithId;
+  const { file, folder } = customEvent.detail;
 
   const formData = new FormData();
   formData.append("file", file);
@@ -48,7 +48,7 @@ queueEmitter.addEventListener("enqueue", async (event) => {
   }));
 
   try {
-    const response = await fetch("/api/documents", {
+    const response = await fetch("/api/documents/" + folder, {
       method: "POST",
       body: formData,
       signal: AbortSignal.timeout(60_000),

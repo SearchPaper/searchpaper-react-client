@@ -14,6 +14,9 @@ export function NavbarDropdownMenu() {
         <li>
           <Link to="/documents">Documents</Link>
         </li>
+        <li>
+          <Link to="/folders">Folders</Link>
+        </li>
       </ul>
     </div>
   );

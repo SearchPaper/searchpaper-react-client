@@ -4,12 +4,18 @@ export interface Document {
   _id: string;
   fileName: string;
   uploadDateTime: string;
+  folder: {
+    _id: string;
+    name: string;
+    description: string;
+  };
 }
 
 interface SearchParams {
   term: string;
   size: string;
   page: string;
+  folder: string;
 }
 
 interface DocumentStore {
@@ -21,13 +27,23 @@ interface DocumentStore {
 }
 
 export const useDocumentStore = create<DocumentStore>((set) => ({
-  searchParams: { term: "", page: "0", size: "7" },
+  searchParams: { term: "", page: "0", size: "7", folder: "" },
   pages: 0,
   documents: [],
   list: async (searchParams) => {
     const urlSearchParams = new URLSearchParams({ ...searchParams });
 
-    const response = await fetch("/api/documents?" + urlSearchParams);
+    const urlSearchParamsWithoutFolder = "/api/documents?" + urlSearchParams;
+
+    const urlSearchParamsWithFolder =
+      `/api/documents/folder/${searchParams.folder}?` + urlSearchParams;
+
+    const url =
+      searchParams.folder !== ""
+        ? urlSearchParamsWithFolder
+        : urlSearchParamsWithoutFolder;
+
+    const response = await fetch(url);
 
     if (!response.ok) {
       /* just return early and do nothing */
