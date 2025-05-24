@@ -42,7 +42,7 @@ export default function FoldersPageButtonDelete({ folder }: Parameters) {
       <button className="btn btn-xs btn-error btn-circle" onClick={toggle}>
         <i className="fa-solid fa-trash" />
       </button>
-      <dialog className="modal xl:modal-middle modal-bottom">
+      <dialog className="modal xl:modal-middle modal-bottom" open={isOpen}>
         <div className="hidden xl:flex modal-action"></div>
 
         <div className="modal-box">
